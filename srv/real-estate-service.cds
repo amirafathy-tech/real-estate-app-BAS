@@ -1,7 +1,6 @@
 using real.estate as my from '../db/schema';
 
 service RealEstateService {
-  entity Buildings as projection on my.Buildings;
-  entity Units as projection on my.Units;
-  entity Images as projection on my.Images;
+  entity Buildings as projection on my.Building;
+  entity Units as projection on my.Unit;
 }

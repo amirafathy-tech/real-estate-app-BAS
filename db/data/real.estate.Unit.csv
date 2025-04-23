@@ -1,0 +1,4 @@
+ID,name,status,building_ID
+u001,Unit 1,available,1a2b3c4d
+u002,Unit 2,reserved,1a2b3c4d
+u003,Unit 3,available,2b3c4d5e

@@ -12,8 +12,8 @@
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
   displayBlock="true">
-
-  <VBox id="uploadVBox" class="sapUiSmallMargin">
+<!-- 
+   <VBox id="uploadVBox" class="sapUiSmallMargin">
     <items>
       <Title id="uploadTitle" text="Upload Site Map Image" level="H2" />
 
@@ -36,7 +36,61 @@
         id="siteMapImage"
         width="100%" visible="false"  />
     </items>
-  </VBox>
+  </VBox>  -->
+
+  <!-- <VBox id="listBox">
+  <Text id="building" text="Buildings" class="sapUiSmallMargin"/>
+  <List id="buildingList" items="{/Buildings}" selectionChange="onBuildingSelect" mode="SingleSelectMaster">
+    <StandardListItem id="buildingItem" title="{name}" description="{location}" />
+  </List>
+
+  <Text id="unit" text="Units" class="sapUiSmallMargin"/>
+  <List id="unitList" items="{/SelectedBuildingUnits}" mode="SingleSelectMaster" selectionChange="onUnitSelect">
+    <StandardListItem
+    id="unitItem"
+      title="{name}"
+      type="Active"
+      description="{status}"
+      highlight="{= ${status} === 'reserved' ? 'Error' : 'Success' }"
+    />
+  </List>
+  </VBox> -->
+
+   <!-- updated with static data -->
+
+ <Page id="page" title="{i18n>title}">
+    <VBox id="uploadVBox" class="sapUiSmallMargin">
+      <items>
+        <Title id="uploadTitle" text="Upload Site Map Image" level="H2" />
+        <unified:FileUploader
+          id="fileUploader"
+          name="siteMap"
+          uploadOnChange="false"
+          change="onFileChange"
+          fileType="jpg,jpeg,png"
+          buttonText="Choose Image"
+          width="300px" />
+        <Button
+          id="uploadBtn"
+          text="Upload Image"
+          press="onUploadPress"
+          class="sapUiSmallMarginTop" />
+        <Image
+          id="siteMapImage"
+          width="100%"
+          visible="false" />
+      </items>
+    </VBox>
+
+    <VBox id="listBox">
+      <Text id="building" text="Buildings" class="sapUiSmallMargin"/>
+      <List id="buildingList" items="{/Buildings}" selectionChange="onBuildingSelect" mode="SingleSelectMaster">
+        <StandardListItem id="buildingItem" title="{name}" description="{location}" />
+      </List>
+    </VBox>
+  </Page>
+
+
 </mvc:View>
 
 

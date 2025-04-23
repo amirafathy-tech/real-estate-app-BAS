@@ -1,1 +1,0 @@
-using RealEstateService as service from '../../srv/real-estate-service';
