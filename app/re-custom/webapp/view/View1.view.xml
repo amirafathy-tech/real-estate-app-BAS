@@ -1,0 +1,44 @@
+<!-- <mvc:View controllerName="real.estate.custom.recustom.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+    </Page>
+</mvc:View> -->
+
+
+
+<mvc:View xmlns:unified="sap.ui.unified"
+  controllerName="real.estate.custom.recustom.controller.View1"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true">
+
+  <VBox id="uploadVBox" class="sapUiSmallMargin">
+    <items>
+      <Title id="uploadTitle" text="Upload Site Map Image" level="H2" />
+
+      <unified:FileUploader
+        id="fileUploader"
+        name="siteMap"
+        uploadOnChange="false"
+        change="onFileChange"
+        fileType="jpg,jpeg,png"
+        buttonText="Choose Image"
+        width="300px" />
+
+      <Button
+        id="uploadBtn"
+        text="Upload Image"
+        press="onUploadPress"
+        class="sapUiSmallMarginTop" />
+
+      <Image
+        id="siteMapImage"
+        width="100%" visible="false"  />
+    </items>
+  </VBox>
+</mvc:View>
+
+
+
+

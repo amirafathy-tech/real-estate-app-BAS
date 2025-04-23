@@ -1,0 +1,6 @@
+ID,building_ID,unitNumber,type,size,status
+"u1", "b1", "101", "Apartment", 85.5, "Available"
+"u2", "b1", "102", "Apartment", 90.0, "Occupied"
+"u3", "b2", "201", "Office", 120.0, "Available"
+"u4", "b2", "202", "Office", 110.0, "Reserved"
+"u5", "b3", "301", "Retail", 200.0, "Available"

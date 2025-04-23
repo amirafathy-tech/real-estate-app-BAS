@@ -1,0 +1,38 @@
+{
+  "name": "RE-App",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^8",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.9.0",
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^8"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-real-estate": "cds watch --open real-estate/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-real-estate1": "cds watch --open real-estate1/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-re-custom": "cds watch --open re-custom/webapp/index.html?sap-ui-xx-viewCache=false"
+  },
+  "sapux": [
+    "app/real-estate",
+    "app/real-estate1"
+  ],
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "database": "db.sqlite"
+        }
+      },
+      "auth": "mocked"
+    }
+  }
+}
