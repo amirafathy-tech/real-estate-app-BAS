@@ -1,126 +1,20 @@
-_schema-version: 3.3.0
-ID: RE-App
-description: A simple CAP project.
+ID: re-custom
+_schema-version: "3.1"
 version: 1.0.0
+
 modules:
-- name: RE-App-srv
-  type: nodejs
-  path: gen/srv
-  requires:
-  - name: RE-App-db
-  provides:
-  - name: srv-api
-    properties:
-      srv-url: ${default-url}
-  parameters:
-    buildpack: nodejs_buildpack
-    instances: 1
-  build-parameters:
-    builder: npm-ci
-- name: RE-App-db-deployer
-  type: hdb
-  path: gen/db
-  requires:
-  - name: RE-App-db
-  parameters:
-    buildpack: nodejs_buildpack
-- name: RE-App-app-content
-  type: com.sap.application.content
-  path: .
-  requires:
-  - name: RE-App-repo-host
+  - name: re-custom
+    type: html5
+    path: app/re-custom/dist
+    build-parameters:
+      builder: npm
+      build-result: dist
+      supported-platforms: []
     parameters:
-      content-target: true
-  build-parameters:
-    build-result: resources
-    requires:
-    - artifacts:
-      - realestaterealestate.zip
-      name: realestaterealestate
-      target-path: resources/
-    - artifacts:
-      - realestaterealestate1.zip
-      name: realestaterealestate1
-      target-path: resources/
-    - artifacts:
-      - realestatecustomrecustom.zip
-      name: realestatecustomrecustom
-      target-path: resources/
-- name: realestaterealestate
-  type: html5
-  path: app/real-estate
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: realestaterealestate1
-  type: html5
-  path: app/real-estate1
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: realestatecustomrecustom
-  type: html5
-  path: app/re-custom
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-resources:
-- name: RE-App-db
-  type: com.sap.xs.hdi-container
-  parameters:
-    service: hana
-    service-plan: hdi-shared
-- name: RE-App-repo-host
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-name: RE-App-html5-service
-    service-plan: app-host
-- name: RE-App-destination-service
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      HTML5Runtime_enabled: false
-      init_data:
-        instance:
-          destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          - Authentication: NoAuthentication
-            HTML5.DynamicDestination: true
-            HTML5.ForwardAuthToken: true
-            Name: RE-App-srv-api
-            ProxyType: Internet
-            Type: HTTP
-            URL: ~{srv-api/srv-url}
-          existing_destinations_policy: update
-      version: 1.0.0
-    service: destination
-    service-name: RE-App-destination-service
-    service-plan: lite
-  requires:
-  - name: srv-api
-parameters:
-  deploy_mode: html5-repo
-  enable-parallel-deployments: true
-build-parameters:
-  before-all:
-  - builder: custom
-    commands:
-    - npm ci
-    - npx cds build --production
+      disk-quota: 128M
+      memory: 128M
+    properties:
+      CORS:
+        - uriPattern: .
+          allowedMethods: ["GET", "POST", "PUT", "DELETE"]
+          allowedOrigin: ["*"]
