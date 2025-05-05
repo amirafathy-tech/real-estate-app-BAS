@@ -1,20 +1,130 @@
-ID: re-custom
-_schema-version: "3.1"
+_schema-version: 3.3.0
+ID: RE-App
 version: 1.0.0
-
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+  deploy_mode: html5-repo
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
 modules:
-  - name: re-custom
-    type: html5
-    path: app/re-custom/dist
-    build-parameters:
-      builder: npm
-      build-result: dist
-      supported-platforms: []
+  - name: RE-App-srv
+    type: nodejs
+    path: gen/srv
     parameters:
-      disk-quota: 128M
-      memory: 128M
-    properties:
-      CORS:
-        - uriPattern: .
-          allowedMethods: ["GET", "POST", "PUT", "DELETE"]
-          allowedOrigin: ["*"]
+      instances: 1
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: RE-App-destination
+
+  - name: RE-App-app-deployer
+    type: com.sap.application.content
+    path: gen
+    requires:
+      - name: RE-App-html5-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: app/
+      requires:
+        - name: REApprecustom
+          artifacts:
+            - re-custom.zip
+          target-path: app/
+
+  - name: REApprecustom
+    type: html5
+    path: app/re-custom
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: RE-App-destinations
+    type: com.sap.application.content
+    requires:
+      - name: RE-App-auth
+        parameters:
+          service-key:
+            name: RE-App-auth-key
+      - name: RE-App-html5-repo-host
+        parameters:
+          service-key:
+            name: RE-App-html5-repo-host-key
+      - name: srv-api
+      - name: RE-App-destination
+        parameters:
+          content-target: true
+    build-parameters:
+      no-source: true
+    parameters:
+      content:
+        instance:
+          existing_destinations_policy: update
+          destinations:
+            - Name: RE-App-html5-repository
+              ServiceInstanceName: RE-App-html5-repo-host
+              ServiceKeyName: RE-App-html5-repo-host-key
+              sap.cloud.service: REApp.service
+            - Name: RE-App-auth
+              Authentication: OAuth2UserTokenExchange
+              ServiceInstanceName: RE-App-auth
+              ServiceKeyName: RE-App-auth-key
+              sap.cloud.service: REApp.service
+
+resources:
+  - name: RE-App-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            existing_destinations_policy: update
+            destinations:
+              - Name: RE-App-srv-api
+                URL: ~{srv-api/srv-url}
+                Authentication: NoAuthentication
+                Type: HTTP
+                ProxyType: Internet
+                HTML5.ForwardAuthToken: true
+                HTML5.DynamicDestination: true
+              - Name: ui5
+                URL: https://ui5.sap.com
+                Authentication: NoAuthentication
+                Type: HTTP
+                ProxyType: Internet
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+
+  - name: RE-App-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+  - name: RE-App-html5-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
