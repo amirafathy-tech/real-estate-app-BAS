@@ -17,7 +17,8 @@
     },
     "dataSources": {
       "RealEstateService": {
-        "uri": "https://port4004-workspaces-ws-nsgdx.us10.trial.applicationstudio.cloud.sap/odata/v4/real-estate/",           
+        "uri": "https://port4004-workspaces-ws-4n9tn.us10.trial.applicationstudio.cloud.sap/odata/v4/real-estate/",  
+                 
          "type": "OData",
             "settings": {
                 "odataVersion": "4.0"
